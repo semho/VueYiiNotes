@@ -1,12 +1,12 @@
 <template>
   <div class="tc-note">
     <div class="tc-note-header">
-      <span class="tc-note-close"> X </span>
+      <span @click="deleteNote" class="tc-note-close"> X </span>
     </div>
-    <div class="tc-note-title" contenteditable="">
+    <div class="tc-note-title" contenteditable="" @blur="titleChanged">
       {{ note.title }}
     </div>
-    <div class="tc-note-body" contenteditable="">
+    <div class="tc-note-body" contenteditable="" @blur="bodyChanged">
       {{ note.body }}
     </div>
   </div>
@@ -14,6 +14,7 @@
 
 <script>
 export default {
+  // eslint-disable-next-line vue/multi-word-component-names
   name: "Note",
   props: {
     note: {
@@ -21,6 +22,21 @@ export default {
       required: true,
     },
   },
+  methods: {
+    deleteNote(){
+      this.$emit('deleteNote', this.note);
+    },
+    titleChanged($event){
+      // eslint-disable-next-line vue/no-mutating-props
+      this.note.title = $event.target.innerHTML;
+      this.$emit('noteUpdated', this.note);
+    },
+    bodyChanged($event) {
+      // eslint-disable-next-line vue/no-mutating-props
+      this.note.body = $event.target.innerHTML;
+      this.$emit('noteUpdated', this.note);
+    }
+  }
 };
 </script>
 

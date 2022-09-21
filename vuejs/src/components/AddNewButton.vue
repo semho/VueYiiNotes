@@ -1,8 +1,13 @@
-<template><div class="new-note-btn">New Note</div></template>
+<template><button @click="addNote" class="new-note-btn">Новая заметка</button></template>
 
 <script>
 export default {
   name: "AddNewButton",
+  methods: {
+    addNote(){
+      this.$emit('listenerAddNotea', this.addNote);
+    }
+  }
 };
 </script>
 
