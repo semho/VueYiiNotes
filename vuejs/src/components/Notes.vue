@@ -11,7 +11,7 @@
 <script>
 import AddNewButton from "./AddNewButton.vue";
 import Note from "./Note.vue";
-import httpClient from '../services/http.service.js';
+import notesService from '../services/notes.service.js';
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Notes",
@@ -23,23 +23,23 @@ export default {
   },
   methods: {
     async addNote() {
-      const {status, data} = await httpClient.post('note', {});
+      const {status, data} = await notesService.create({title:'', body: ''});
       if (status === 201) { 
         this.notes.unshift(data);
       }
     },
     async deleteNote(note) {
-      const {status} = await httpClient.delete(`note/${note.id}`, {});
+      const {status} = await notesService.delete(note.id);
       if (status === 204) { 
         this.notes.splice(this.notes.indexOf(note), 1);
       }
     },
     async noteUpdated(note) {
-      await httpClient.put(`note/${note.id}`, note);
+      await notesService.update(note);
     }
   },
   async mounted() {
-    const {status, data} = await httpClient.get('note');
+    const {status, data} = await notesService.get();
     if (status === 200) {
       this.notes = data;
     }
