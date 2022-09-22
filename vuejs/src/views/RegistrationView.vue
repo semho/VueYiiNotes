@@ -11,12 +11,14 @@
         <input type="password" v-model="form.password" placeholder="Введите пароль"><br>
         <input type="password" v-model="form.password_repeat" placeholder="Повторите пароль"><br>
         <button>Зарегистрироваться</button>
-        <router-link to="/login" class="link">Войти</router-link>
+        <router-link to="/login" class="link">Авторизация</router-link>
     </form>
 </div>
 </template>
 
 <script>
+import authService from '@/services/auth.service';
+
     export default {
         name: "RegistrationView",
         data() {
@@ -30,8 +32,13 @@
             }
         },
         methods: {
-            register() {
-                console.log(this.form);
+            async register() {
+                const {success, errors} = await authService.register(this.form);
+                if (success) {
+                    this.$router.push({name: 'home'});
+                } else {
+                    this.errors = errors;
+                }
             }
         }
     }

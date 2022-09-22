@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import authService from '@/services/auth.service';
 import Navbar from './Navbar.vue';
     export default {
     name: "DefaultLayout",
@@ -14,6 +15,9 @@ import Navbar from './Navbar.vue';
         return {
             user: {}
         }
+    },
+    async beforeMount() {
+        this.user = await authService.getCurrentUser();
     }
 }
 </script>

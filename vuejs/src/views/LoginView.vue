@@ -16,6 +16,7 @@
 </template>
 
 <script>
+    import authServise from '../services/auth.service.js';
     export default {
         name: "LoginView",
         data() {
@@ -28,8 +29,13 @@
             }
         },
         methods: {
-            login() {
-                console.log(this.form);
+            async login() {
+                const {success, errors} = await authServise.login(this.form);  
+                if (success) {
+                    this.$router.push({name: 'home'});
+                } else {
+                    this.errors = errors;
+                }
             }
         }
     }

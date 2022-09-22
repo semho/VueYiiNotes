@@ -6,6 +6,8 @@
 </template>
 
 <script>
+import authService from '@/services/auth.service';
+
     export default {
         // eslint-disable-next-line vue/multi-word-component-names
         name: "Navbar",
@@ -14,7 +16,7 @@
         },
         methods: {
             logout(){
-                console.log('logout');
+                authService.logout();
             }
         }
     }

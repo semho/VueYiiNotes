@@ -4,6 +4,7 @@ import HomeView from '../views/HomeView.vue';
 import AuthLayout from '../layouts/AuthLayout.vue';
 import LoginView from '../views/LoginView.vue';
 import RegistrationView from '../views/RegistrationView.vue';
+import authService from '@/services/auth.service';
 
 const routes = [
   {
@@ -17,7 +18,7 @@ const routes = [
         name: 'home',
         component: HomeView
       }
-    ]
+    ],
   },
   {
     path: '/auth',
@@ -50,5 +51,15 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.name === 'home' && !authService.isLoggedIn()) {
+    next({name: 'login'});
+  } else if (authService.isLoggedIn() && to.name !== 'home') {
+    next({name: 'home'})
+  } else {
+    next();
+  }
+});
 
 export default router

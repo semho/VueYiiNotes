@@ -11,46 +11,37 @@
 <script>
 import AddNewButton from "./AddNewButton.vue";
 import Note from "./Note.vue";
+import httpClient from '../services/http.service.js';
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Notes",
   components: { Note, AddNewButton },
   data() {
     return {
-      notes: [
-        {
-          title: "Заметка 1",
-          body: "Описание заметки 1",
-        },
-        {
-          title: "Заметка 2",
-          body: "Описание заметки 2",
-        },
-        {
-          title: "Заметка 3",
-          body: "Описание заметки 3",
-        },
-        {
-          title: "Заметка 4",
-          body: "Описание заметки 4",
-        },
-        {
-          title: "Заметка 5",
-          body: "Описание заметки 5",
-        },
-      ],
+      notes: [],
     };
   },
   methods: {
-    addNote() {
-      this.notes.unshift({title: '', body: ''});
+    async addNote() {
+      const {status, data} = await httpClient.post('note', {});
+      if (status === 201) { 
+        this.notes.unshift(data);
+      }
     },
-    deleteNote(note) {
-      this.notes.splice(this.notes.indexOf(note), 1);
+    async deleteNote(note) {
+      const {status} = await httpClient.delete(`note/${note.id}`, {});
+      if (status === 204) { 
+        this.notes.splice(this.notes.indexOf(note), 1);
+      }
     },
-    // eslint-disable-next-line no-unused-vars
-    noteUpdated(note) {
-      
+    async noteUpdated(note) {
+      await httpClient.put(`note/${note.id}`, note);
+    }
+  },
+  async mounted() {
+    const {status, data} = await httpClient.get('note');
+    if (status === 200) {
+      this.notes = data;
     }
   }
 };
